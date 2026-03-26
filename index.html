@@ -1,116 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDI — Mapa Conceptual</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- MathJax -->
-  <script>
-    MathJax = {
-      tex: { inlineMath: [["$", "$"]] },
-      svg: { fontCache: "global" }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <meta charset="UTF-8">
+    <title>Mapa PDI</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<!-- TOOLTIP -->
-<div id="tooltip"></div>
-
-<!-- OVERLAY -->
-<div id="overlay"></div>
-
-<!-- HEADER -->
 <header>
-  <div class="htag">ESCOM · IPN · 3BV2 · Dra. María Elena Cruz Meza</div>
-  <h1>Procesamiento Digital de Imágenes</h1>
-  <p>Mapa Conceptual Interactivo — Unidades 1 & 2 · Clic en cualquier nodo</p>
+    <h3>ESCOM · IPN · 3BV2 · Dra. María Elena Cruz Meza</h3>
+    <h1>Procesamiento Digital de Imágenes</h1>
+    <p>Mapa Conceptual Interactivo — Unidades 1 & 2 · Clic en cualquier nodo</p>
+
+    <div class="botones">
+        <button id="mapaBtn">Mapa Mental</button>
+        <button id="tarjetasBtn">Vista Tarjetas</button>
+    </div>
+
+    <nav>
+        <ul>
+            <li>Unidad 1</li>
+            <li>Unidad 2</li>
+            <li>Transversal</li>
+        </ul>
+    </nav>
 </header>
 
-<!-- CONTROLES -->
-<div class="ctrls">
-  <button class="btn on" id="bmap">Mapa Mental</button>
-  <button class="btn" id="bcards">Vista Tarjetas</button>
-</div>
+<main>
+    <div class="mapa-container">
 
-<!-- LEYENDA -->
-<div class="leg">
-  <div class="li"><div class="lc" style="background:#f8a7c8"></div>Unidad 1</div>
-  <div class="li"><div class="lc" style="background:#c9a7f0"></div>Unidad 2</div>
-  <div class="li"><div class="lc" style="background:#a7c8f8"></div>Transversal</div>
-</div>
+        <!-- Nodo central -->
+        <div class="nodo centro">Análisis</div>
 
-<!-- MAPA -->
-<div id="mapv">
-<svg id="ms" viewBox="0 0 1340 900">
+        <!-- Nodos alrededor -->
+        <div class="nodo izquierda">Imagen</div>
+        <div class="nodo abajo-izq">Histograma</div>
+        <div class="nodo derecha">Etiquetado</div>
+        <div class="nodo abajo-der">Ruido</div>
 
-<!-- NODOS -->
-<g class="sn" id="n-img" data-tip="Imagen Digital">
-  <ellipse cx="350" cy="200" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
-  <text x="350" y="205" text-anchor="middle">Imagen</text>
-</g>
+    </div>
+</main>
 
-<g class="sn" id="n-hist" data-tip="Histograma">
-  <ellipse cx="350" cy="400" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
-  <text x="350" y="405" text-anchor="middle">Histograma</text>
-</g>
-
-<g class="sn" id="n-color" data-tip="Color">
-  <ellipse cx="350" cy="600" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
-  <text x="350" y="605" text-anchor="middle">Color</text>
-</g>
-
-<g class="sn" id="n-ai" data-tip="Análisis">
-  <ellipse cx="700" cy="120" rx="70" ry="45" fill="#ede1ff" stroke="#c9a7f0"/>
-  <text x="700" y="125" text-anchor="middle">Análisis</text>
-</g>
-
-<g class="sn" id="n-eti" data-tip="Etiquetado">
-  <ellipse cx="1000" cy="200" rx="70" ry="45" fill="#ede1ff" stroke="#c9a7f0"/>
-  <text x="1000" y="205" text-anchor="middle">Etiquetado</text>
-</g>
-
-<g class="sn" id="n-rui" data-tip="Ruido">
-  <ellipse cx="1000" cy="400" rx="70" ry="45" fill="#ddeeff" stroke="#a7c8f8"/>
-  <text x="1000" y="405" text-anchor="middle">Ruido</text>
-</g>
-
-<g class="sn" id="n-ops" data-tip="Operaciones">
-  <ellipse cx="1000" cy="600" rx="70" ry="45" fill="#ddeeff" stroke="#a7c8f8"/>
-  <text x="1000" y="605" text-anchor="middle">Operaciones</text>
-</g>
-
-</svg>
-</div>
-
-<!-- TARJETAS -->
-<div id="cardsv">
-  <div class="cg" id="cg"></div>
-</div>
-
-<!-- PANEL -->
-<div id="pnl">
-  <div id="ph">
-    <h2 id="ptitle"></h2>
-    <span id="punit"></span>
-    <button id="pcl">✕</button>
-  </div>
-
-  <div id="pdemo">
-    <canvas id="dc" width="330" height="120"></canvas>
-  </div>
-
-  <div id="pformula"></div>
-</div>
-
-<!-- JS -->
-<script src="app.js" defer></script>
-
+<script src="app.js"></script>
 </body>
 </html>
