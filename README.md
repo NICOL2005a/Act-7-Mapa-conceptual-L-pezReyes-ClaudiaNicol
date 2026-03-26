@@ -1,7 +1,7 @@
 # 🧠 Mapa Conceptual Interactivo — PDI
 
 > **Procesamiento Digital de Imágenes** · Unidades 1 & 2  
-> ESCOM · IPN · Grupo 3BV2 · Dra. María Elena Cruz Meza
+> ESCOM · Claudia Nicol López Reyes · Grupo 4BM2 · Dra. María Elena Cruz Meza
 
 ---
 
