@@ -1,11 +1,8 @@
-// ============================================================
-// PDI Mapa Conceptual — app.js
-// ============================================================
 var histAnim   = null;
 var noiseTimer = null;
 var colorState = { r:180, g:80, b:200 };
 
-// ── DATA ──────────────────────────────────────────────────
+//  DATA 
 var DATA = {
   img:{
     t:'Imagen Digital', u:'Unidad 1 \u00b7 Fundamentos',
@@ -114,7 +111,7 @@ var DATA = {
   }
 };
 
-// ── DEMOS ─────────────────────────────────────────────────
+//  DEMOS 
 function stopAnims() {
   if (histAnim)   { clearInterval(histAnim);   histAnim   = null; }
   if (noiseTimer) { clearInterval(noiseTimer); noiseTimer = null; }
@@ -315,7 +312,7 @@ function demoOps(cv) {
   ctx.setLineDash([]);
 }
 
-// ── PANEL ─────────────────────────────────────────────────
+//  PANEL 
 function openPanel(key) {
   var d=DATA[key];
 
@@ -384,7 +381,7 @@ function updS() {
   drawSeg(document.getElementById('dc'),t);
 }
 
-// ── VISTA TARJETAS ────────────────────────────────────────
+//  VISTA TARJETAS 
 var bgm={img:'#fde2ef',hist:'#fde2ef',color:'#fde2ef',ai:'#ede1ff',eti:'#ede1ff',rui:'#ddeeff',ops:'#ddeeff'};
 var bdb={img:'#f8a7c8',hist:'#f8a7c8',color:'#f8a7c8',ai:'#c9a7f0',eti:'#c9a7f0',rui:'#a7c8f8',ops:'#a7c8f8'};
 
@@ -413,7 +410,7 @@ function buildCards() {
   });
 }
 
-// ── INIT ──────────────────────────────────────────────────
+//  INIT 
 document.addEventListener('DOMContentLoaded', function() {
   // botones vista
   document.getElementById('bmap').addEventListener('click',   function(){ switchView('map'); });
