@@ -76,7 +76,7 @@ mapa-pdi/
 ## 👩‍💻 Autora
 
 **Claudia Nicol López Reyes**  
-Estudiante de Ingeniería en Inteligencia Artificial
+Ingeniería en Inteligencia Artificial
 ESCOM · Instituto Politécnico Nacional · Grupo 4BM2
 
 ---
