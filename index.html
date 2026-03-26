@@ -1,46 +1,298 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Mapa PDI</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDI — Mapa Conceptual</title>
+  <link rel="stylesheet" href="style.css">
+  <script>MathJax={tex:{inlineMath:[["$","$"]]},svg:{fontCache:"global"}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
+<div id="tooltip"></div>
+<div id="overlay"></div>
+
 <header>
-    <h3>ESCOM · IPN · 3BV2 · Dra. María Elena Cruz Meza</h3>
-    <h1>Procesamiento Digital de Imágenes</h1>
-    <p>Mapa Conceptual Interactivo — Unidades 1 & 2 · Clic en cualquier nodo</p>
-
-    <div class="botones">
-        <button id="mapaBtn">Mapa Mental</button>
-        <button id="tarjetasBtn">Vista Tarjetas</button>
-    </div>
-
-    <nav>
-        <ul>
-            <li>Unidad 1</li>
-            <li>Unidad 2</li>
-            <li>Transversal</li>
-        </ul>
-    </nav>
+  <div class="htag">ESCOM &middot; IPN &middot; 3BV2 &middot; Dra. Mar&iacute;a Elena Cruz Meza</div>
+  <h1>Procesamiento Digital de Im&aacute;genes</h1>
+  <p>Mapa Conceptual Interactivo &mdash; Unidades 1 &amp; 2 &nbsp;&middot;&nbsp; Clic en cualquier nodo</p>
 </header>
 
-<main>
-    <div class="mapa-container">
+<div class="ctrls">
+  <button class="btn on" id="bmap">&#128506; Mapa Mental</button>
+  <button class="btn"    id="bcards">&#128203; Vista Tarjetas</button>
+</div>
 
-        <!-- Nodo central -->
-        <div class="nodo centro">Análisis</div>
+<div class="leg">
+  <div class="li"><div class="lc" style="background:#f8a7c8"></div>Unidad 1 &mdash; Fundamentos</div>
+  <div class="li"><div class="lc" style="background:#c9a7f0"></div>Unidad 2 &mdash; An&aacute;lisis</div>
+  <div class="li"><div class="lc" style="background:#a7c8f8"></div>Transversal</div>
+</div>
 
-        <!-- Nodos alrededor -->
-        <div class="nodo izquierda">Imagen</div>
-        <div class="nodo abajo-izq">Histograma</div>
-        <div class="nodo derecha">Etiquetado</div>
-        <div class="nodo abajo-der">Ruido</div>
+<div id="mapv">
+<svg id="ms" viewBox="0 0 1340 900" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="gp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde2ef"/><stop offset="100%" stop-color="#f8a7c8"/></linearGradient>
+  <linearGradient id="gv" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ede1ff"/><stop offset="100%" stop-color="#c9a7f0"/></linearGradient>
+  <linearGradient id="gb" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ddeeff"/><stop offset="100%" stop-color="#a7c8f8"/></linearGradient>
+  <linearGradient id="gc" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0e8ff"/><stop offset="100%" stop-color="#d4b8ff"/></linearGradient>
+  <marker id="arr-pk" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#f8a7c8"/>
+  </marker>
+  <marker id="arr-pu" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#c9a7f0"/>
+  </marker>
+  <marker id="arr-bl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#a7c8f8"/>
+  </marker>
+</defs>
 
-    </div>
-</main>
+<!-- ── CONECTORES PRINCIPALES con flechas ── -->
+<line class="ln-pk" x1="613" y1="414" x2="396" y2="212" stroke="#f8a7c8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pk)"/>
+<line class="ln-pk" x1="600" y1="435" x2="383" y2="435" stroke="#f8a7c8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pk)"/>
+<line class="ln-pk" x1="613" y1="456" x2="396" y2="658" stroke="#f8a7c8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pk)"/>
+<line class="ln-pu" x1="670" y1="396" x2="670" y2="172" stroke="#c9a7f0" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pu)"/>
+<line class="ln-pu" x1="728" y1="414" x2="945" y2="212" stroke="#c9a7f0" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-pu)"/>
+<line class="ln-bl" x1="740" y1="435" x2="955" y2="435" stroke="#a7c8f8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-bl)"/>
+<line class="ln-bl" x1="728" y1="456" x2="945" y2="658" stroke="#a7c8f8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr-bl)"/>
 
-<script src="app.js"></script>
+<!-- ── SUB-CONECTORES ── -->
+<line class="ln-sub" x1="320" y1="192" x2="195" y2="108" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="318" y1="205" x2="195" y2="205" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="320" y1="220" x2="195" y2="316" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="304" y1="418" x2="158" y2="360" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="304" y1="435" x2="158" y2="435" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="304" y1="452" x2="158" y2="510" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="320" y1="652" x2="178" y2="595" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="320" y1="665" x2="178" y2="665" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="320" y1="680" x2="178" y2="754" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="644" y1="128" x2="533" y2="53"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="670" y1="120" x2="670" y2="48"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="696" y1="128" x2="808" y2="53"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1018" y1="192" x2="1148" y2="108" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1020" y1="205" x2="1148" y2="205" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1018" y1="220" x2="1148" y2="316" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1026" y1="418" x2="1170" y2="360" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1028" y1="435" x2="1170" y2="435" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1026" y1="452" x2="1170" y2="510" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1018" y1="652" x2="1160" y2="595" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1020" y1="665" x2="1160" y2="665" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+<line class="ln-sub" x1="1018" y1="680" x2="1160" y2="754" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
+
+<!-- ══ CENTRO ══ -->
+<g class="sn" id="n-center" style="animation-delay:.1s">
+  <ellipse cx="670" cy="435" rx="82" ry="52" fill="url(#gc)" stroke="#c9a7f0" stroke-width="2"/>
+  <text x="670" y="424" text-anchor="middle" font-size="20">&#128421;</text>
+  <text x="670" y="447" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#7c4dbe">PDI</text>
+  <text x="670" y="463" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#9b6de0">Unidades 1 y 2</text>
+</g>
+
+<!-- ══ IMAGEN DIGITAL ══ -->
+<g class="sn" id="n-img" data-tip="Imagen Digital" style="animation-delay:.2s">
+  <ellipse cx="350" cy="205" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
+  <text x="350" y="192" text-anchor="middle" font-size="18">&#128444;</text>
+  <text x="350" y="211" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Imagen</text>
+  <text x="350" y="226" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Digital</text>
+</g>
+<g class="sub-img" style="cursor:pointer">
+  <rect x="72" y="72"  width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="88"  y="92"  font-size="12">&#128208;</text>
+  <text x="133" y="92"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Pixel &amp; Resolucion</text>
+  <text x="133" y="107" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">PPI/DPI</text>
+</g>
+<g class="sub-img" style="cursor:pointer">
+  <rect x="58"  y="180" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="74"  y="200" font-size="12">&#128290;</text>
+  <text x="119" y="200" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Profundidad bits</text>
+  <text x="119" y="215" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">1b / 8b / 24b</text>
+</g>
+<g class="sub-img" style="cursor:pointer">
+  <rect x="72"  y="292" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="88"  y="312" font-size="12">&#128259;</text>
+  <text x="133" y="312" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Muestreo y</text>
+  <text x="133" y="327" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">Cuantizacion</text>
+</g>
+
+<!-- ══ HISTOGRAMA ══ -->
+<g class="sn" id="n-hist" data-tip="Histograma" style="animation-delay:.3s">
+  <ellipse cx="337" cy="435" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
+  <text x="337" y="422" text-anchor="middle" font-size="18">&#128202;</text>
+  <text x="337" y="442" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Histo-</text>
+  <text x="337" y="457" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">grama</text>
+</g>
+<g class="sub-hist" style="cursor:pointer">
+  <rect x="30"  y="334" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="46"  y="354" font-size="12">&#9728;</text>
+  <text x="93"  y="354" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Brillo y Contraste</text>
+  <text x="93"  y="369" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">g=f+c / g=a*f</text>
+</g>
+<g class="sub-hist" style="cursor:pointer">
+  <rect x="30"  y="411" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="46"  y="431" font-size="12">&#9878;</text>
+  <text x="93"  y="431" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Ecualizacion</text>
+  <text x="93"  y="446" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">distribucion uniforme</text>
+</g>
+<g class="sub-hist" style="cursor:pointer">
+  <rect x="30"  y="485" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="46"  y="505" font-size="12">&#127919;</text>
+  <text x="93"  y="505" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Especificacion</text>
+  <text x="93"  y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">hist. objetivo</text>
+</g>
+
+<!-- ══ MODELOS COLOR ══ -->
+<g class="sn" id="n-color" data-tip="Modelos de Color" style="animation-delay:.4s">
+  <ellipse cx="350" cy="665" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
+  <text x="350" y="652" text-anchor="middle" font-size="18">&#127912;</text>
+  <text x="350" y="672" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Modelos</text>
+  <text x="350" y="687" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">de Color</text>
+</g>
+<g class="sub-color" style="cursor:pointer">
+  <rect x="55"  y="568" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="71"  y="588" font-size="12">&#128308;</text>
+  <text x="116" y="588" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">RGB / RGBA</text>
+  <text x="116" y="603" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">modelo aditivo</text>
+</g>
+<g class="sub-color" style="cursor:pointer">
+  <rect x="55"  y="641" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="71"  y="661" font-size="12">&#127752;</text>
+  <text x="116" y="661" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">HSV / HSI</text>
+  <text x="116" y="676" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">tono / sat / valor</text>
+</g>
+<g class="sub-color" style="cursor:pointer">
+  <rect x="55"  y="730" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
+  <text x="71"  y="750" font-size="12">&#128250;</text>
+  <text x="116" y="750" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">YCbCr / CMY</text>
+  <text x="116" y="765" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">lum / crominancia</text>
+</g>
+
+<!-- ══ ANALISIS ══ -->
+<g class="sn" id="n-ai" data-tip="Analisis de Imagenes" style="animation-delay:.2s">
+  <ellipse cx="670" cy="143" rx="76" ry="46" fill="url(#gv)" stroke="#c9a7f0" stroke-width="1.8"/>
+  <text x="670" y="130" text-anchor="middle" font-size="18">&#128300;</text>
+  <text x="670" y="150" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">Analisis de</text>
+  <text x="670" y="165" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">Imagenes</text>
+</g>
+<g class="sub-ai" style="cursor:pointer">
+  <rect x="422" y="24"  width="110" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="438" y="44"  font-size="12">&#9986;</text>
+  <text x="477" y="44"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Segmentacion</text>
+  <text x="477" y="59"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">umbral / Otsu</text>
+</g>
+<g class="sub-ai" style="cursor:pointer">
+  <rect x="614" y="16"  width="112" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="630" y="36"  font-size="12">&#128269;</text>
+  <text x="670" y="36"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Detec. Bordes</text>
+  <text x="670" y="51"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">Sobel / Canny</text>
+</g>
+<g class="sub-ai" style="cursor:pointer">
+  <rect x="806" y="24"  width="110" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="822" y="44"  font-size="12">&#128207;</text>
+  <text x="861" y="44"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Extraccion</text>
+  <text x="861" y="59"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">forma / momentos</text>
+</g>
+
+<!-- ══ ETIQUETADO ══ -->
+<g class="sn" id="n-eti" data-tip="Etiquetado Comp. Conexas" style="animation-delay:.3s">
+  <ellipse cx="987" cy="205" rx="70" ry="46" fill="url(#gv)" stroke="#c9a7f0" stroke-width="1.8"/>
+  <text x="987" y="192" text-anchor="middle" font-size="18">&#127991;</text>
+  <text x="987" y="212" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Etiquetado</text>
+  <text x="987" y="227" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Comp. Conexas</text>
+</g>
+<g class="sub-eti" style="cursor:pointer">
+  <rect x="1150" y="72"  width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="1166" y="92"  font-size="12">&#10133;</text>
+  <text x="1214" y="92"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Vecindad V4</text>
+  <text x="1214" y="107" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">4 vecinos sin diag.</text>
+</g>
+<g class="sub-eti" style="cursor:pointer">
+  <rect x="1150" y="180" width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="1166" y="200" font-size="12">&#11036;</text>
+  <text x="1214" y="200" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Vecindad V8</text>
+  <text x="1214" y="215" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">8 vecinos con diag.</text>
+</g>
+<g class="sub-eti" style="cursor:pointer">
+  <rect x="1150" y="292" width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
+  <text x="1166" y="312" font-size="12">&#128270;</text>
+  <text x="1214" y="312" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Algoritmo BFS</text>
+  <text x="1214" y="327" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">2 pasadas / Union-Find</text>
+</g>
+
+<!-- ══ RUIDO ══ -->
+<g class="sn" id="n-rui" data-tip="Modelos de Ruido" style="animation-delay:.4s">
+  <ellipse cx="995" cy="435" rx="68" ry="46" fill="url(#gb)" stroke="#a7c8f8" stroke-width="1.8"/>
+  <text x="995" y="422" text-anchor="middle" font-size="18">&#128225;</text>
+  <text x="995" y="442" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">Modelos</text>
+  <text x="995" y="457" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">de Ruido</text>
+</g>
+<g class="sub-rui" style="cursor:pointer">
+  <rect x="1172" y="334" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1188" y="354" font-size="12">&#128276;</text>
+  <text x="1236" y="354" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Gaussiano</text>
+  <text x="1236" y="369" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">distrib. normal u/s2</text>
+</g>
+<g class="sub-rui" style="cursor:pointer">
+  <rect x="1172" y="411" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1188" y="431" font-size="12">&#129474;</text>
+  <text x="1236" y="431" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Sal y Pimienta</text>
+  <text x="1236" y="446" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">pixeles 0 / 255</text>
+</g>
+<g class="sub-rui" style="cursor:pointer">
+  <rect x="1172" y="485" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1188" y="505" font-size="12">&#128225;</text>
+  <text x="1236" y="505" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Rayleigh / Erlang</text>
+  <text x="1236" y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">radar / medicas</text>
+</g>
+
+<!-- ══ OPS ══ -->
+<g class="sn" id="n-ops" data-tip="Ops. Aritmeticas y Logicas" style="animation-delay:.5s">
+  <ellipse cx="987" cy="665" rx="70" ry="46" fill="url(#gb)" stroke="#a7c8f8" stroke-width="1.8"/>
+  <text x="987" y="652" text-anchor="middle" font-size="18">&#9881;</text>
+  <text x="987" y="672" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Ops. Aritmet.</text>
+  <text x="987" y="687" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">y Logicas</text>
+</g>
+<g class="sub-ops" style="cursor:pointer">
+  <rect x="1162" y="568" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1178" y="588" font-size="12">&#10133;</text>
+  <text x="1226" y="588" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Suma / Resta</text>
+  <text x="1226" y="603" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">f+g / |f-g|</text>
+</g>
+<g class="sub-ops" style="cursor:pointer">
+  <rect x="1162" y="641" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1178" y="661" font-size="12">&#128256;</text>
+  <text x="1226" y="661" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">AND / OR / NOT</text>
+  <text x="1226" y="676" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">mascaras binarias</text>
+</g>
+<g class="sub-ops" style="cursor:pointer">
+  <rect x="1162" y="730" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
+  <text x="1178" y="750" font-size="12">&#10006;</text>
+  <text x="1226" y="750" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Mult / Division</text>
+  <text x="1226" y="765" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9"  fill="#888">blending / flat-field</text>
+</g>
+
+<text x="10"   y="18" font-size="11" font-weight="700" fill="#c0487e" opacity=".8" font-family="Quicksand,sans-serif">U1 - Fundamentos PDI</text>
+<text x="1330" y="18" font-size="11" font-weight="700" fill="#7c4dbe" opacity=".8" text-anchor="end" font-family="Quicksand,sans-serif">U2 - Analisis de Imagenes</text>
+</svg>
+</div>
+
+<div id="cardsv"><div class="cg" id="cg"></div></div>
+
+<!-- PANEL -->
+<div id="pnl">
+  <div id="ph">
+    <h2 id="ptitle"></h2>
+    <span class="su" id="punit"></span>
+    <button id="pcl">&#10005;</button>
+  </div>
+  <div id="pdemo">
+    <canvas id="dc" width="330" height="118"></canvas>
+    <div class="dl" id="dlbl"></div>
+  </div>
+  <div id="pformula"></div>
+  <div id="pextra"></div>
+  <div id="pitems"></div>
+</div>
+
+<script src="app.js" defer></script>
 </body>
 </html>
