@@ -3,311 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDI &mdash; Mapa Conceptual Interactivo</title>
+  <title>PDI — Mapa Conceptual</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
-  <script>MathJax = { tex: { inlineMath: [['$','$']] }, svg: { fontCache: 'global' } };</script>
+
+  <!-- MathJax -->
+  <script>
+    MathJax = {
+      tex: { inlineMath: [["$", "$"]] },
+      svg: { fontCache: "global" }
+    };
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
+
 <body>
 
+<!-- TOOLTIP -->
 <div id="tooltip"></div>
-<div id="overlay" onclick="closePanel()"></div>
 
-<!-- ═══ HEADER ═══ -->
+<!-- OVERLAY -->
+<div id="overlay"></div>
+
+<!-- HEADER -->
 <header>
-  <div class="htag">ESCOM &middot; IPN &middot; 3BV2 &middot; Dra. Mar&iacute;a Elena Cruz Meza</div>
-  <h1>Procesamiento Digital de Im&aacute;genes</h1>
-  <p>Mapa Conceptual Interactivo &mdash; Unidades 1 &amp; 2 &nbsp;&middot;&nbsp; Clic en cualquier nodo</p>
+  <div class="htag">ESCOM · IPN · 3BV2 · Dra. María Elena Cruz Meza</div>
+  <h1>Procesamiento Digital de Imágenes</h1>
+  <p>Mapa Conceptual Interactivo — Unidades 1 & 2 · Clic en cualquier nodo</p>
 </header>
 
-<!-- ═══ CONTROLES ═══ -->
+<!-- CONTROLES -->
 <div class="ctrls">
-  <button class="btn on" id="bmap"   onclick="switchView('map')">&#128506; Mapa Mental</button>
-  <button class="btn"    id="bcards" onclick="switchView('cards')">&#128203; Vista Tarjetas</button>
+  <button class="btn on" id="bmap">Mapa Mental</button>
+  <button class="btn" id="bcards">Vista Tarjetas</button>
 </div>
 
-<!-- ═══ LEYENDA ═══ -->
+<!-- LEYENDA -->
 <div class="leg">
-  <div class="li"><div class="lc" style="background:#f8a7c8"></div>Unidad 1 &mdash; Fundamentos</div>
-  <div class="li"><div class="lc" style="background:#c9a7f0"></div>Unidad 2 &mdash; An&aacute;lisis</div>
+  <div class="li"><div class="lc" style="background:#f8a7c8"></div>Unidad 1</div>
+  <div class="li"><div class="lc" style="background:#c9a7f0"></div>Unidad 2</div>
   <div class="li"><div class="lc" style="background:#a7c8f8"></div>Transversal</div>
 </div>
 
-<!-- ═══ MAPA SVG ═══ -->
+<!-- MAPA -->
 <div id="mapv">
-<svg id="ms" viewBox="0 0 1340 900" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="gp" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%"   stop-color="#fde2ef"/>
-    <stop offset="100%" stop-color="#f8a7c8"/>
-  </linearGradient>
-  <linearGradient id="gv" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%"   stop-color="#ede1ff"/>
-    <stop offset="100%" stop-color="#c9a7f0"/>
-  </linearGradient>
-  <linearGradient id="gb" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%"   stop-color="#ddeeff"/>
-    <stop offset="100%" stop-color="#a7c8f8"/>
-  </linearGradient>
-  <linearGradient id="gc" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%"   stop-color="#f0e8ff"/>
-    <stop offset="100%" stop-color="#d4b8ff"/>
-  </linearGradient>
-</defs>
+<svg id="ms" viewBox="0 0 1340 900">
 
-<!-- ── Conectores principales ── -->
-<line x1="613" y1="414" x2="388" y2="205" stroke="#f8a7c8" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="600" y1="435" x2="375" y2="435" stroke="#f8a7c8" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="613" y1="456" x2="388" y2="665" stroke="#f8a7c8" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="670" y1="396" x2="670" y2="165" stroke="#c9a7f0" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="728" y1="414" x2="952" y2="205" stroke="#c9a7f0" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="740" y1="435" x2="960" y2="435" stroke="#a7c8f8" stroke-width="2.2" stroke-dasharray="6,3"/>
-<line x1="728" y1="456" x2="952" y2="665" stroke="#a7c8f8" stroke-width="2.2" stroke-dasharray="6,3"/>
-
-<!-- ── Sub-conectores izquierda (img) ── -->
-<line x1="322" y1="192" x2="195" y2="108" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="320" y1="205" x2="195" y2="205" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="322" y1="220" x2="195" y2="316" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores izquierda (hist) ── -->
-<line x1="306" y1="418" x2="158" y2="360" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="306" y1="435" x2="158" y2="435" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="306" y1="452" x2="158" y2="510" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores izquierda (color) ── -->
-<line x1="322" y1="652" x2="178" y2="595" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="322" y1="665" x2="178" y2="665" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<line x1="322" y1="680" x2="178" y2="754" stroke="#f8a7c8" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores arriba (ai) ── -->
-<line x1="646" y1="128" x2="533" y2="53"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<line x1="670" y1="120" x2="670" y2="48"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<line x1="694" y1="128" x2="808" y2="53"  stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores derecha (eti) ── -->
-<line x1="1020" y1="192" x2="1148" y2="108" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<line x1="1022" y1="205" x2="1148" y2="205" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<line x1="1020" y1="220" x2="1148" y2="316" stroke="#c9a7f0" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores derecha (rui) ── -->
-<line x1="1028" y1="418" x2="1170" y2="360" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-<line x1="1030" y1="435" x2="1170" y2="435" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-<line x1="1028" y1="452" x2="1170" y2="510" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-<!-- ── Sub-conectores derecha (ops) ── -->
-<line x1="1020" y1="652" x2="1160" y2="595" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-<line x1="1022" y1="665" x2="1160" y2="665" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-<line x1="1020" y1="680" x2="1160" y2="754" stroke="#a7c8f8" stroke-width="1.2" opacity=".5"/>
-
-<!-- ══ NODO CENTRAL ══ -->
-<ellipse cx="670" cy="435" rx="82" ry="52" fill="url(#gc)" stroke="#c9a7f0" stroke-width="2"/>
-<text x="670" y="424" text-anchor="middle" font-size="20">&#128421;</text>
-<text x="670" y="447" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#7c4dbe">PDI</text>
-<text x="670" y="463" text-anchor="middle" font-family="Nunito,sans-serif"    font-size="10"                   fill="#9b6de0">Unidades 1 y 2</text>
-
-<!-- ══ IMAGEN DIGITAL ══ -->
-<g class="sn" onclick="openPanel('img')" data-tip="Imagen Digital">
-  <ellipse cx="350" cy="205" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
-  <text x="350" y="192" text-anchor="middle" font-size="18">&#128444;</text>
-  <text x="350" y="211" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Imagen</text>
-  <text x="350" y="226" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Digital</text>
-</g>
-<g onclick="openPanel('img')" style="cursor:pointer">
-  <rect x="72" y="72" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="88"  y="92" font-size="13">&#128208;</text>
-  <text x="133" y="92" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">P&iacute;xel &amp; Resoluci&oacute;n</text>
-  <text x="133" y="107" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">PPI/DPI &bull; tama&ntilde;o</text>
-</g>
-<g onclick="openPanel('img')" style="cursor:pointer">
-  <rect x="58" y="180" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="74"  y="200" font-size="13">&#128290;</text>
-  <text x="119" y="200" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Profundidad bits</text>
-  <text x="119" y="215" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">1b &bull; 8b &bull; 24b RGB</text>
-</g>
-<g onclick="openPanel('img')" style="cursor:pointer">
-  <rect x="72" y="292" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="88"  y="312" font-size="13">&#128259;</text>
-  <text x="133" y="312" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Muestreo y</text>
-  <text x="133" y="327" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">Cuantizaci&oacute;n</text>
+<!-- NODOS -->
+<g class="sn" id="n-img" data-tip="Imagen Digital">
+  <ellipse cx="350" cy="200" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
+  <text x="350" y="205" text-anchor="middle">Imagen</text>
 </g>
 
-<!-- ══ HISTOGRAMA ══ -->
-<g class="sn" onclick="openPanel('hist')" data-tip="Histograma">
-  <ellipse cx="337" cy="435" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
-  <text x="337" y="422" text-anchor="middle" font-size="18">&#128202;</text>
-  <text x="337" y="442" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Histo-</text>
-  <text x="337" y="457" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">grama</text>
-</g>
-<g onclick="openPanel('hist')" style="cursor:pointer">
-  <rect x="30" y="334" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="46" y="354" font-size="13">&#9728;</text>
-  <text x="93" y="354" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Brillo &amp; Contraste</text>
-  <text x="93" y="369" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">g=f+c &bull; g=a&middot;f</text>
-</g>
-<g onclick="openPanel('hist')" style="cursor:pointer">
-  <rect x="30" y="411" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="46" y="431" font-size="13">&#9878;</text>
-  <text x="93" y="431" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Ecualizaci&oacute;n</text>
-  <text x="93" y="446" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">distribuci&oacute;n uniforme</text>
-</g>
-<g onclick="openPanel('hist')" style="cursor:pointer">
-  <rect x="30" y="485" width="126" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="46" y="505" font-size="13">&#127919;</text>
-  <text x="93" y="505" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">Especificaci&oacute;n</text>
-  <text x="93" y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">histograma objetivo</text>
+<g class="sn" id="n-hist" data-tip="Histograma">
+  <ellipse cx="350" cy="400" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
+  <text x="350" y="405" text-anchor="middle">Histograma</text>
 </g>
 
-<!-- ══ MODELOS COLOR ══ -->
-<g class="sn" onclick="openPanel('color')" data-tip="Modelos de Color">
-  <ellipse cx="350" cy="665" rx="68" ry="46" fill="url(#gp)" stroke="#f8a7c8" stroke-width="1.8"/>
-  <text x="350" y="652" text-anchor="middle" font-size="18">&#127912;</text>
-  <text x="350" y="672" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Modelos</text>
-  <text x="350" y="687" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">de Color</text>
-</g>
-<g onclick="openPanel('color')" style="cursor:pointer">
-  <rect x="55" y="568" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="71"  y="588" font-size="13">&#128308;</text>
-  <text x="116" y="588" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">RGB / RGBA</text>
-  <text x="116" y="603" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">modelo aditivo</text>
-</g>
-<g onclick="openPanel('color')" style="cursor:pointer">
-  <rect x="55" y="641" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="71"  y="661" font-size="13">&#127752;</text>
-  <text x="116" y="661" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">HSV / HSI</text>
-  <text x="116" y="676" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">tono &bull; sat &bull; valor</text>
-</g>
-<g onclick="openPanel('color')" style="cursor:pointer">
-  <rect x="55" y="730" width="122" height="48" rx="9" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.2"/>
-  <text x="71"  y="750" font-size="13">&#128250;</text>
-  <text x="116" y="750" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#c0487e">YCbCr / CMY</text>
-  <text x="116" y="765" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">lum &bull; crominancia</text>
+<g class="sn" id="n-color" data-tip="Color">
+  <ellipse cx="350" cy="600" rx="70" ry="45" fill="#fde2ef" stroke="#f8a7c8"/>
+  <text x="350" y="605" text-anchor="middle">Color</text>
 </g>
 
-<!-- ══ ANALISIS DE IMAGENES ══ -->
-<g class="sn" onclick="openPanel('ai')" data-tip="Analisis de Imagenes">
-  <ellipse cx="670" cy="143" rx="76" ry="46" fill="url(#gv)" stroke="#c9a7f0" stroke-width="1.8"/>
-  <text x="670" y="130" text-anchor="middle" font-size="18">&#128300;</text>
-  <text x="670" y="150" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">An&aacute;lisis de</text>
-  <text x="670" y="165" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">Im&aacute;genes</text>
-</g>
-<g onclick="openPanel('ai')" style="cursor:pointer">
-  <rect x="422" y="24" width="110" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="438" y="44" font-size="13">&#9986;</text>
-  <text x="477" y="44" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Segmentaci&oacute;n</text>
-  <text x="477" y="59" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">umbral &bull; Otsu</text>
-</g>
-<g onclick="openPanel('ai')" style="cursor:pointer">
-  <rect x="614" y="16" width="112" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="630" y="36" font-size="13">&#128269;</text>
-  <text x="670" y="36" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Detecc. Bordes</text>
-  <text x="670" y="51" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">Sobel &bull; Canny</text>
-</g>
-<g onclick="openPanel('ai')" style="cursor:pointer">
-  <rect x="806" y="24" width="110" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="822" y="44" font-size="13">&#128207;</text>
-  <text x="861" y="44" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Extracci&oacute;n</text>
-  <text x="861" y="59" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">forma &bull; momentos</text>
+<g class="sn" id="n-ai" data-tip="Análisis">
+  <ellipse cx="700" cy="120" rx="70" ry="45" fill="#ede1ff" stroke="#c9a7f0"/>
+  <text x="700" y="125" text-anchor="middle">Análisis</text>
 </g>
 
-<!-- ══ ETIQUETADO ══ -->
-<g class="sn" onclick="openPanel('eti')" data-tip="Etiquetado Comp. Conexas">
-  <ellipse cx="987" cy="205" rx="70" ry="46" fill="url(#gv)" stroke="#c9a7f0" stroke-width="1.8"/>
-  <text x="987" y="192" text-anchor="middle" font-size="18">&#127991;</text>
-  <text x="987" y="212" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Etiquetado</text>
-  <text x="987" y="227" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Comp. Conexas</text>
-</g>
-<g onclick="openPanel('eti')" style="cursor:pointer">
-  <rect x="1150" y="72" width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="1166" y="92" font-size="13">&#10133;</text>
-  <text x="1214" y="92" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Vecindad V4</text>
-  <text x="1214" y="107" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">4 vecinos sin diag.</text>
-</g>
-<g onclick="openPanel('eti')" style="cursor:pointer">
-  <rect x="1150" y="180" width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="1166" y="200" font-size="13">&#11036;</text>
-  <text x="1214" y="200" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Vecindad V8</text>
-  <text x="1214" y="215" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">8 vecinos con diag.</text>
-</g>
-<g onclick="openPanel('eti')" style="cursor:pointer">
-  <rect x="1150" y="292" width="128" height="48" rx="9" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.2"/>
-  <text x="1166" y="312" font-size="13">&#128270;</text>
-  <text x="1214" y="312" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#7c4dbe">Alg. BFS</text>
-  <text x="1214" y="327" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">2 pasadas Union-Find</text>
+<g class="sn" id="n-eti" data-tip="Etiquetado">
+  <ellipse cx="1000" cy="200" rx="70" ry="45" fill="#ede1ff" stroke="#c9a7f0"/>
+  <text x="1000" y="205" text-anchor="middle">Etiquetado</text>
 </g>
 
-<!-- ══ MODELOS DE RUIDO ══ -->
-<g class="sn" onclick="openPanel('rui')" data-tip="Modelos de Ruido">
-  <ellipse cx="995" cy="435" rx="68" ry="46" fill="url(#gb)" stroke="#a7c8f8" stroke-width="1.8"/>
-  <text x="995" y="422" text-anchor="middle" font-size="18">&#128225;</text>
-  <text x="995" y="442" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">Modelos</text>
-  <text x="995" y="457" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">de Ruido</text>
-</g>
-<g onclick="openPanel('rui')" style="cursor:pointer">
-  <rect x="1172" y="334" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1188" y="354" font-size="13">&#128276;</text>
-  <text x="1236" y="354" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Gaussiano</text>
-  <text x="1236" y="369" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">distrib. normal &mu; &sigma;&sup2;</text>
-</g>
-<g onclick="openPanel('rui')" style="cursor:pointer">
-  <rect x="1172" y="411" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1188" y="431" font-size="13">&#129474;</text>
-  <text x="1236" y="431" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Sal &amp; Pimienta</text>
-  <text x="1236" y="446" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">p&iacute;xeles 0 / 255</text>
-</g>
-<g onclick="openPanel('rui')" style="cursor:pointer">
-  <rect x="1172" y="485" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1188" y="505" font-size="13">&#128225;</text>
-  <text x="1236" y="505" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Rayleigh/Erlang</text>
-  <text x="1236" y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">radar &bull; m&eacute;dicas</text>
+<g class="sn" id="n-rui" data-tip="Ruido">
+  <ellipse cx="1000" cy="400" rx="70" ry="45" fill="#ddeeff" stroke="#a7c8f8"/>
+  <text x="1000" y="405" text-anchor="middle">Ruido</text>
 </g>
 
-<!-- ══ OPS ARITMETICAS Y LOGICAS ══ -->
-<g class="sn" onclick="openPanel('ops')" data-tip="Ops. Aritmeticas y Logicas">
-  <ellipse cx="987" cy="665" rx="70" ry="46" fill="url(#gb)" stroke="#a7c8f8" stroke-width="1.8"/>
-  <text x="987" y="652" text-anchor="middle" font-size="18">&#9881;</text>
-  <text x="987" y="672" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Ops. Aritm&eacute;t.</text>
-  <text x="987" y="687" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">y L&oacute;gicas</text>
-</g>
-<g onclick="openPanel('ops')" style="cursor:pointer">
-  <rect x="1162" y="568" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1178" y="588" font-size="13">&#10133;</text>
-  <text x="1226" y="588" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Suma / Resta</text>
-  <text x="1226" y="603" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">f+g &bull; |f&minus;g|</text>
-</g>
-<g onclick="openPanel('ops')" style="cursor:pointer">
-  <rect x="1162" y="641" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1178" y="661" font-size="13">&#128256;</text>
-  <text x="1226" y="661" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">AND / OR / NOT</text>
-  <text x="1226" y="676" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">m&aacute;scaras binarias</text>
-</g>
-<g onclick="openPanel('ops')" style="cursor:pointer">
-  <rect x="1162" y="730" width="128" height="48" rx="9" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.2"/>
-  <text x="1178" y="750" font-size="13">&#10006;</text>
-  <text x="1226" y="750" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#3a7dd4">Mult / Divisi&oacute;n</text>
-  <text x="1226" y="765" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#888">blending &bull; flat-field</text>
+<g class="sn" id="n-ops" data-tip="Operaciones">
+  <ellipse cx="1000" cy="600" rx="70" ry="45" fill="#ddeeff" stroke="#a7c8f8"/>
+  <text x="1000" y="605" text-anchor="middle">Operaciones</text>
 </g>
 
-<text x="10"   y="18" font-size="11" font-weight="700" fill="#c0487e" opacity=".8" font-family="Quicksand,sans-serif">U1 &mdash; Fundamentos PDI</text>
-<text x="1330" y="18" font-size="11" font-weight="700" fill="#7c4dbe" opacity=".8" text-anchor="end" font-family="Quicksand,sans-serif">U2 &mdash; An&aacute;lisis de Im&aacute;genes</text>
 </svg>
 </div>
 
-<!-- ═══ VISTA TARJETAS ═══ -->
+<!-- TARJETAS -->
 <div id="cardsv">
   <div class="cg" id="cg"></div>
 </div>
 
-<!-- ═══ PANEL LATERAL ═══ -->
+<!-- PANEL -->
 <div id="pnl">
   <div id="ph">
     <h2 id="ptitle"></h2>
-    <span class="su" id="punit"></span>
-    <button id="pcl" onclick="closePanel()">&#10005;</button>
+    <span id="punit"></span>
+    <button id="pcl">✕</button>
   </div>
+
   <div id="pdemo">
-    <canvas id="dc" width="330" height="118"></canvas>
-    <div class="dl" id="dlbl"></div>
+    <canvas id="dc" width="330" height="120"></canvas>
   </div>
+
   <div id="pformula"></div>
-  <div id="pextra"></div>
-  <div id="pitems"></div>
 </div>
 
-<script src="app.js"></script>
+<!-- JS -->
+<script src="app.js" defer></script>
+
 </body>
 </html>
