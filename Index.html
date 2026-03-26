@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Conceptual — PDI Unidades 1 & 2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg:       #ffffff;
+    --pink:     #f8a7c8;
+    --pink-l:   #fde2ef;
+    --pink-d:   #c0487e;
+    --purple:   #c9a7f0;
+    --purple-l: #ede1ff;
+    --purple-d: #7c4dbe;
+    --blue:     #a7c8f8;
+    --blue-l:   #ddeeff;
+    --blue-d:   #3a7dd4;
+    --gray:     #888;
+    --text:     #2a1a3e;
+    --text-mid: #555;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #fff;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align:center; padding:32px 20px 8px;
+    border-bottom: 2px solid #ede1ff;
+  }
+  .htag {
+    font-size:11px; letter-spacing:4px; text-transform:uppercase;
+    color:var(--purple-d); margin-bottom:8px; font-weight:700;
+  }
+  header h1 {
+    font-family:'Quicksand',sans-serif;
+    font-size:clamp(22px,4vw,40px); font-weight:700;
+    color: var(--purple-d); margin-bottom:5px;
+  }
+  header p { color:var(--gray); font-size:13px; }
+
+  .controls {
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+    padding:14px 20px 6px;
+  }
+  .ctrl-btn {
+    background: var(--purple-l); border:1.5px solid var(--purple);
+    color:var(--purple-d); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700;
+    padding:7px 20px; border-radius:20px; cursor:pointer; transition:all .2s;
+  }
+  .ctrl-btn:hover, .ctrl-btn.active { background: var(--purple); color:#fff; }
+
+  .legend {
+    display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
+    padding:6px 20px 12px;
+  }
+  .legend-item { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-mid); font-weight:600; }
+  .legend-dot { width:12px; height:12px; border-radius:50%; }
+
+  .map-wrapper {
+    width:100%; padding:10px 0 50px;
+    display:flex; justify-content:center;
+    overflow-x:auto;
+  }
+  svg#mind-map { min-width:980px; max-width:1420px; width:100%; height:auto; }
+
+  /* CARDS */
+  #card-view { display:none; padding:20px; max-width:1300px; margin:0 auto; }
+  #card-view.show { display:block; }
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; }
+  .topic-card {
+    border-radius:14px; padding:20px; cursor:pointer;
+    border:2px solid transparent; transition:all .25s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .topic-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.13); }
+  .card-emoji { font-size:26px; margin-bottom:10px; display:block; }
+  .topic-card h3 { font-family:'Quicksand',sans-serif; font-size:17px; font-weight:700; margin-bottom:5px; }
+  .topic-card .cu { font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:10px; display:block; }
+  .topic-card ul { list-style:none; }
+  .topic-card ul li { font-size:12px; color:var(--text-mid); padding:3px 0; border-bottom:1px solid rgba(0,0,0,.05); }
+  .topic-card ul li::before { content:'› '; font-weight:700; }
+
+  /* DETAIL PANEL */
+  #detail-panel {
+    position:fixed; top:50%; right:0;
+    transform:translateY(-50%) translateX(102%);
+    z-index:100; width:clamp(280px,28vw,370px);
+    background:#fff; border-left:3px solid var(--purple);
+    border-radius:14px 0 0 14px;
+    padding:26px 22px;
+    transition:transform .35s cubic-bezier(.22,.68,0,1.2);
+    box-shadow:-4px 0 28px rgba(0,0,0,0.13);
+    max-height:88vh; overflow-y:auto;
+  }
+  #detail-panel.open { transform:translateY(-50%) translateX(0); }
+  #detail-panel h2 { font-family:'Quicksand',sans-serif; font-size:20px; font-weight:700; margin-bottom:4px; }
+  #detail-panel .dp-tag { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:14px; display:block; font-weight:700; }
+  .dp-item { display:flex; gap:9px; margin-bottom:11px; align-items:flex-start; }
+  .dp-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .dp-item p { font-size:12.5px; line-height:1.6; color:var(--text-mid); }
+  .dp-item p strong { color:var(--purple-d); }
+  #close-panel {
+    position:absolute; top:12px; right:12px;
+    background:var(--purple-l); border:none; color:var(--purple-d);
+    width:26px; height:26px; border-radius:50%; cursor:pointer; font-size:13px;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  #close-panel:hover { background:var(--pink); color:var(--pink-d); }
+
+  #tooltip {
+    position:fixed; pointer-events:none; z-index:200;
+    background:var(--purple-d); border-radius:7px;
+    padding:6px 12px; font-size:12px; color:#fff; font-weight:600;
+    opacity:0; transition:opacity .15s; white-space:nowrap;
+  }
+
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:#f5f0ff; }
+  ::-webkit-scrollbar-thumb { background:var(--purple); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div id="tooltip"></div>
+
+<header>
+  <div class="htag">ESCOM · IPN · 3BV2 · Dra. María Elena Cruz Meza</div>
+  <h1>Procesamiento Digital de Imágenes</h1>
+  <p>Mapa Conceptual Interactivo — Unidades 1 &amp; 2 &nbsp;·&nbsp; Haz clic en cualquier nodo para ver detalles</p>
+</header>
+
+<div class="controls">
+  <button class="ctrl-btn active" id="btn-map" onclick="showView('map')">🗺 Mapa Mental</button>
+  <button class="ctrl-btn" id="btn-cards" onclick="showView('cards')">📋 Vista Tarjetas</button>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#f8a7c8"></div>Unidad 1 — Fundamentos</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#c9a7f0"></div>Unidad 2 — Análisis</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a7c8f8"></div>Conceptos transversales</div>
+</div>
+
+<!-- ═══════════════ MAP VIEW ═══════════════ -->
+<div class="map-wrapper" id="map-view">
+<svg id="mind-map" viewBox="0 0 1420 960" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <filter id="sh">
+    <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="rgba(150,100,200,0.15)"/>
+  </filter>
+  <linearGradient id="gp" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#fde2ef"/>
+    <stop offset="100%" stop-color="#f8a7c8"/>
+  </linearGradient>
+  <linearGradient id="gv" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ede1ff"/>
+    <stop offset="100%" stop-color="#c9a7f0"/>
+  </linearGradient>
+  <linearGradient id="gb" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ddeeff"/>
+    <stop offset="100%" stop-color="#a7c8f8"/>
+  </linearGradient>
+  <linearGradient id="gc" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f0e8ff"/>
+    <stop offset="100%" stop-color="#d4b8ff"/>
+  </linearGradient>
+</defs>
+
+<!-- ══════ LÍNEAS PRINCIPALES centro→rama ══════ -->
+<line x1="645" y1="432" x2="408" y2="210" stroke="#f8a7c8" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="630" y1="450" x2="400" y2="450" stroke="#f8a7c8" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="645" y1="468" x2="408" y2="690" stroke="#f8a7c8" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="700" y1="408" x2="700" y2="175" stroke="#c9a7f0" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="760" y1="425" x2="1002" y2="210" stroke="#c9a7f0" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="770" y1="450" x2="1002" y2="450" stroke="#a7c8f8" stroke-width="2.5" stroke-dasharray="7,4"/>
+<line x1="760" y1="468" x2="1002" y2="690" stroke="#a7c8f8" stroke-width="2.5" stroke-dasharray="7,4"/>
+
+<!-- ══════ LÍNEAS SECUNDARIAS izquierda ══════ -->
+<!-- img → subs  (col x=95..215, y=70/185/300) -->
+<line x1="340" y1="200" x2="215" y2="105" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="340" y1="210" x2="215" y2="210" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="340" y1="222" x2="215" y2="315" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+
+<!-- hist → subs  (col x=50..170, y=350/450/548) -->
+<line x1="326" y1="432" x2="172" y2="375" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="326" y1="450" x2="172" y2="450" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="326" y1="468" x2="172" y2="528" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+
+<!-- color → subs (col x=75..195, y=624/714/804) -->
+<line x1="340" y1="678" x2="200" y2="630" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="340" y1="690" x2="200" y2="720" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+<line x1="340" y1="703" x2="200" y2="810" stroke="#f8a7c8" stroke-width="1.5" opacity=".55"/>
+
+<!-- ══════ LÍNEAS SECUNDARIAS arriba ══════ -->
+<line x1="672" y1="140" x2="560" y2="65"  stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+<line x1="700" y1="130" x2="700" y2="58"  stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+<line x1="728" y1="140" x2="840" y2="65"  stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+
+<!-- ══════ LÍNEAS SECUNDARIAS derecha ══════ -->
+<!-- eti → subs (col x=1185..1305, y=105/210/315) -->
+<line x1="1068" y1="200" x2="1185" y2="105" stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+<line x1="1068" y1="210" x2="1185" y2="210" stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+<line x1="1068" y1="222" x2="1185" y2="315" stroke="#c9a7f0" stroke-width="1.5" opacity=".55"/>
+
+<!-- rui → subs (col x=1218..1338, y=375/450/528) -->
+<line x1="1066" y1="432" x2="1218" y2="375" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+<line x1="1066" y1="450" x2="1218" y2="450" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+<line x1="1066" y1="468" x2="1218" y2="528" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+
+<!-- ops → subs (col x=1200..1320, y=630/720/810) -->
+<line x1="1068" y1="678" x2="1205" y2="630" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+<line x1="1068" y1="690" x2="1205" y2="720" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+<line x1="1068" y1="703" x2="1205" y2="810" stroke="#a7c8f8" stroke-width="1.5" opacity=".55"/>
+
+<!-- ══════════════ NODO CENTRAL ══════════════ -->
+<g filter="url(#sh)">
+  <ellipse cx="700" cy="450" rx="85" ry="54" fill="url(#gc)" stroke="#c9a7f0" stroke-width="2.5"/>
+  <text x="700" y="443" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="16" font-weight="700" fill="#7c4dbe">PDI</text>
+  <text x="700" y="462" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="600" fill="#9b6de0">Unidades 1 y 2</text>
+</g>
+
+<!-- ══════════════ RAMA 1 — IMAGEN DIGITAL (rosa) ══════════════ -->
+<g onclick="openPanel('img')" data-tip="Imagen Digital" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="360" cy="210" rx="72" ry="44" fill="url(#gp)" stroke="#f8a7c8" stroke-width="2"/>
+  <text x="360" y="204" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#c0487e">Imagen</text>
+  <text x="360" y="220" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#c0487e">Digital</text>
+</g>
+<!-- subnodos img: y=70 / 183 / 297 -->
+<g onclick="openPanel('img')" style="cursor:pointer">
+  <rect x="72" y="68" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="143" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Píxel · Resolución</text>
+  <text x="143" y="104" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">PPI / DPI</text>
+  <text x="143" y="117" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">tamaño de archivo</text>
+</g>
+<g onclick="openPanel('img')" style="cursor:pointer">
+  <rect x="72" y="183" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="143" y="203" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Profundidad de bits</text>
+  <text x="143" y="219" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">1 bit BN · 8 bits gris</text>
+  <text x="143" y="232" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">24 bits RGB color</text>
+</g>
+<g onclick="openPanel('img')" style="cursor:pointer">
+  <rect x="72" y="295" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="143" y="315" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Muestreo &amp;</text>
+  <text x="143" y="331" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">Cuantización</text>
+  <text x="143" y="344" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">continuo → discreto</text>
+</g>
+
+<!-- ══════════════ RAMA 2 — HISTOGRAMA (rosa) ══════════════ -->
+<g onclick="openPanel('hist')" data-tip="Histograma" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="348" cy="450" rx="72" ry="44" fill="url(#gp)" stroke="#f8a7c8" stroke-width="2"/>
+  <text x="348" y="444" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#c0487e">Histo-</text>
+  <text x="348" y="460" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#c0487e">grama</text>
+</g>
+<!-- subnodos hist: y=350 / 425 / 503 -->
+<g onclick="openPanel('hist')" style="cursor:pointer">
+  <rect x="28" y="348" width="143" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="99" y="368" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Brillo &amp; Contraste</text>
+  <text x="99" y="384" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">g = f + c  |  g = a·f</text>
+  <text x="99" y="397" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">traslación · escala</text>
+</g>
+<g onclick="openPanel('hist')" style="cursor:pointer">
+  <rect x="28" y="423" width="143" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="99" y="443" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Ecualización</text>
+  <text x="99" y="459" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">distribución uniforme</text>
+  <text x="99" y="472" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">CDF acumulada</text>
+</g>
+<g onclick="openPanel('hist')" style="cursor:pointer">
+  <rect x="28" y="500" width="143" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="99" y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">Especificación</text>
+  <text x="99" y="536" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">histograma objetivo</text>
+  <text x="99" y="549" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">Rayleigh · exponencial</text>
+</g>
+
+<!-- ══════════════ RAMA 3 — MODELOS COLOR (rosa) ══════════════ -->
+<g onclick="openPanel('color')" data-tip="Modelos de Color" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="360" cy="690" rx="72" ry="44" fill="url(#gp)" stroke="#f8a7c8" stroke-width="2"/>
+  <text x="360" y="684" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">Modelos</text>
+  <text x="360" y="700" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#c0487e">de Color</text>
+</g>
+<!-- subnodos color: y=600 / 693 / 786 -->
+<g onclick="openPanel('color')" style="cursor:pointer">
+  <rect x="57" y="600" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="128" y="620" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">RGB / RGBA</text>
+  <text x="128" y="636" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">modelo aditivo</text>
+  <text x="128" y="649" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">cada canal 0 – 255</text>
+</g>
+<g onclick="openPanel('color')" style="cursor:pointer">
+  <rect x="57" y="693" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="128" y="713" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">HSV / HSI</text>
+  <text x="128" y="729" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">tono · saturación</text>
+  <text x="128" y="742" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">valor / intensidad</text>
+</g>
+<g onclick="openPanel('color')" style="cursor:pointer">
+  <rect x="57" y="786" width="142" height="54" rx="11" fill="#fde2ef" stroke="#f8a7c8" stroke-width="1.5"/>
+  <text x="128" y="806" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#c0487e">YCbCr / CMY</text>
+  <text x="128" y="822" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">luminancia · crominancia</text>
+  <text x="128" y="835" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">sustractivo / TV</text>
+</g>
+
+<!-- ══════════════ RAMA 4 — ANÁLISIS (morado, arriba) ══════════════ -->
+<g onclick="openPanel('ai')" data-tip="Análisis de Imágenes" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="700" cy="155" rx="78" ry="46" fill="url(#gv)" stroke="#c9a7f0" stroke-width="2"/>
+  <text x="700" y="148" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">Análisis de</text>
+  <text x="700" y="165" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#7c4dbe">Imágenes</text>
+</g>
+<!-- subnodos análisis: y=28..82 -->
+<g onclick="openPanel('ai')" style="cursor:pointer">
+  <rect x="438" y="28" width="122" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="499" y="48" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Segmentación</text>
+  <text x="499" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">umbralización</text>
+  <text x="499" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">método de Otsu</text>
+</g>
+<g onclick="openPanel('ai')" style="cursor:pointer">
+  <rect x="639" y="20" width="122" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="700" y="40" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Detección Bordes</text>
+  <text x="700" y="56" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">Sobel · Prewitt</text>
+  <text x="700" y="69" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">Canny</text>
+</g>
+<g onclick="openPanel('ai')" style="cursor:pointer">
+  <rect x="840" y="28" width="122" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="901" y="48" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Extracción</text>
+  <text x="901" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">características</text>
+  <text x="901" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">forma · momentos</text>
+</g>
+
+<!-- ══════════════ RAMA 5 — ETIQUETADO (morado) ══════════════ -->
+<g onclick="openPanel('eti')" data-tip="Etiquetado Componentes Conexas" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="1050" cy="210" rx="74" ry="44" fill="url(#gv)" stroke="#c9a7f0" stroke-width="2"/>
+  <text x="1050" y="200" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Etiquetado</text>
+  <text x="1050" y="215" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Comp. Conexas</text>
+  <text x="1050" y="228" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="9" font-weight="600" fill="#9b6de0">(U2)</text>
+</g>
+<!-- subnodos eti: x=1185..1305  y=68/183/297 -->
+<g onclick="openPanel('eti')" style="cursor:pointer">
+  <rect x="1185" y="68" width="142" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="1256" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Vecindad V4</text>
+  <text x="1256" y="104" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">4 vecinos (cruz)</text>
+  <text x="1256" y="117" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">sin diagonales</text>
+</g>
+<g onclick="openPanel('eti')" style="cursor:pointer">
+  <rect x="1185" y="183" width="142" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="1256" y="203" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Vecindad V8</text>
+  <text x="1256" y="219" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">8 vecinos</text>
+  <text x="1256" y="232" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">incluye diagonales</text>
+</g>
+<g onclick="openPanel('eti')" style="cursor:pointer">
+  <rect x="1185" y="295" width="142" height="54" rx="11" fill="#ede1ff" stroke="#c9a7f0" stroke-width="1.5"/>
+  <text x="1256" y="315" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#7c4dbe">Algoritmo BFS</text>
+  <text x="1256" y="331" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">2 pasadas</text>
+  <text x="1256" y="344" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">Union-Find</text>
+</g>
+
+<!-- ══════════════ RAMA 6 — RUIDO (azul) ══════════════ -->
+<g onclick="openPanel('rui')" data-tip="Modelos de Ruido" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="1065" cy="450" rx="72" ry="44" fill="url(#gb)" stroke="#a7c8f8" stroke-width="2"/>
+  <text x="1065" y="443" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">Modelos</text>
+  <text x="1065" y="459" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="12" font-weight="700" fill="#3a7dd4">de Ruido</text>
+</g>
+<!-- subnodos rui: x=1218..1338  y=348/423/500 -->
+<g onclick="openPanel('rui')" style="cursor:pointer">
+  <rect x="1250" y="348" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1321" y="368" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Gaussiano</text>
+  <text x="1321" y="384" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">distribución normal</text>
+  <text x="1321" y="397" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">μ · σ² · sensores</text>
+</g>
+<g onclick="openPanel('rui')" style="cursor:pointer">
+  <rect x="1250" y="423" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1321" y="443" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Sal &amp; Pimienta</text>
+  <text x="1321" y="459" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">píxeles 0 / 255</text>
+  <text x="1321" y="472" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">errores de transmisión</text>
+</g>
+<g onclick="openPanel('rui')" style="cursor:pointer">
+  <rect x="1250" y="500" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1321" y="520" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Rayleigh / Erlang</text>
+  <text x="1321" y="536" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">radar · imágenes</text>
+  <text x="1321" y="549" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">médicas</text>
+</g>
+
+<!-- ══════════════ RAMA 7 — OPS (azul) ══════════════ -->
+<g onclick="openPanel('ops')" data-tip="Operaciones Aritméticas y Lógicas" style="cursor:pointer" filter="url(#sh)">
+  <ellipse cx="1050" cy="690" rx="74" ry="44" fill="url(#gb)" stroke="#a7c8f8" stroke-width="2"/>
+  <text x="1050" y="680" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Ops. Aritmé-</text>
+  <text x="1050" y="695" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">ticas &amp; Lógicas</text>
+  <text x="1050" y="710" text-anchor="middle" font-family="Quicksand,sans-serif" font-size="9" font-weight="600" fill="#5a9ae0">píxel a píxel</text>
+</g>
+<!-- subnodos ops: x=1205..1325  y=600/693/786 -->
+<g onclick="openPanel('ops')" style="cursor:pointer">
+  <rect x="1205" y="600" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1276" y="620" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Suma / Resta</text>
+  <text x="1276" y="636" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">f+g · |f−g|</text>
+  <text x="1276" y="649" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">promedio · diferencia</text>
+</g>
+<g onclick="openPanel('ops')" style="cursor:pointer">
+  <rect x="1205" y="693" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1276" y="713" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">AND / OR / NOT</text>
+  <text x="1276" y="729" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">máscaras binarias</text>
+  <text x="1276" y="742" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">XOR · intersección</text>
+</g>
+<g onclick="openPanel('ops')" style="cursor:pointer">
+  <rect x="1205" y="786" width="142" height="54" rx="11" fill="#ddeeff" stroke="#a7c8f8" stroke-width="1.5"/>
+  <text x="1276" y="806" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#3a7dd4">Mult / División</text>
+  <text x="1276" y="822" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">blending · escala</text>
+  <text x="1276" y="835" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#888">flat-field correction</text>
+</g>
+
+<!-- etiquetas unidad -->
+<text x="14" y="22" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#c0487e" opacity=".8">U1 — Fundamentos PDI</text>
+<text x="1406" y="22" font-family="Quicksand,sans-serif" font-size="13" font-weight="700" fill="#7c4dbe" opacity=".8" text-anchor="end">U2 — Análisis de Imágenes</text>
+
+</svg>
+</div>
+
+<!-- ═════════════════ CARD VIEW ═════════════════ -->
+<div id="card-view">
+  <div class="card-grid" id="card-grid"></div>
+</div>
+
+<!-- ═════════════════ DETAIL PANEL ═════════════════ -->
+<div id="detail-panel">
+  <button id="close-panel" onclick="closePanel()">✕</button>
+  <h2 id="dp-title"></h2>
+  <span class="dp-tag" id="dp-unit"></span>
+  <div id="dp-content"></div>
+</div>
+
+<script>
+const DATA = {
+  img:{title:"Imagen Digital",unit:"Unidad 1 · Fundamentos",color:"#f8a7c8",tc:"#c0487e",items:[
+    {l:"Definición",t:"Función bidimensional <strong>f(x,y)</strong> donde (x,y) son coordenadas espaciales y el valor es la intensidad del píxel."},
+    {l:"Píxel",t:"Unidad mínima de una imagen. Valor 0–255 (8 bits) representa la intensidad luminosa del canal."},
+    {l:"Resolución",t:"Número de píxeles por unidad (PPI/DPI). Mayor resolución = mayor detalle y mayor peso de archivo."},
+    {l:"Profundidad de bits",t:"1 bit = B/N, 8 bits = 256 tonos de gris, 24 bits = 16.7 M colores RGB. Define cuántos niveles posibles."},
+    {l:"Muestreo",t:"Proceso de convertir la imagen continua a discreta definiendo la rejilla de píxeles."},
+    {l:"Cuantización",t:"Asignación de un nivel de intensidad entero a cada muestra. Más niveles → mayor fidelidad tonal."},
+    {l:"Tipos",t:"Binaria (0/1), escala de grises (8 bits), color (RGB 24 bits), multiespectral (n canales)."},
+  ]},
+  hist:{title:"Histograma",unit:"Unidad 1 · Transformaciones de Intensidad",color:"#f8a7c8",tc:"#c0487e",items:[
+    {l:"Definición",t:"Gráfica de distribución de frecuencias: <strong>h(rk) = nk</strong>. Muestra cuántos píxeles tienen cada nivel de intensidad."},
+    {l:"Brillo",t:"Sumar constante c: <strong>g(x,y) = f(x,y) + c</strong>. Desplaza el histograma horizontalmente."},
+    {l:"Contraste",t:"Multiplicar por constante a: <strong>g(x,y) = a·f(x,y)</strong>. Expande o comprime el rango."},
+    {l:"Ecualización",t:"Redistribuye intensidades para obtener histograma uniforme maximizando el contraste global (usa la CDF)."},
+    {l:"Especificación",t:"Transforma el histograma para que se aproxime a uno de referencia deseado (exponencial, Rayleigh, hiperbólico)."},
+    {l:"Distribuciones",t:"Uniforme, Exponencial, Rayleigh, Hipercúbica, Hiperbólica — cada una aplica distintas transformaciones de intensidad."},
+    {l:"Normalización",t:"Dividir entre el máximo para escalar al rango [0,1] o [0,255]."},
+  ]},
+  color:{title:"Modelos de Color",unit:"Unidad 1 · Representación del Color",color:"#f8a7c8",tc:"#c0487e",items:[
+    {l:"RGB",t:"Rojo, Verde, Azul. Modelo aditivo de luz. Cada canal 0–255. (255,0,0) = rojo puro."},
+    {l:"CMY / CMYK",t:"Cian, Magenta, Amarillo. Modelo sustractivo (impresión). K = negro para compensar imprecisión de tintas."},
+    {l:"HSV",t:"Hue (0–360°), Saturation (0–1), Value (0–1). Más intuitivo para el humano."},
+    {l:"HSI",t:"Similar a HSV pero Intensity = promedio de canales. Separa color de luminosidad."},
+    {l:"YCbCr",t:"Y = luminancia, Cb/Cr = crominancia. Usado en JPEG y video digital."},
+    {l:"Conversión RGB→HSV",t:"H con arctan de componentes; S = (max−min)/max; V = max(R,G,B). Proceso reversible."},
+    {l:"Importancia",t:"El modelo elegido impacta directamente en segmentación por color, umbralización y análisis."},
+  ]},
+  ai:{title:"Análisis de Imágenes",unit:"Unidad 2 · Visión Artificial",color:"#c9a7f0",tc:"#7c4dbe",items:[
+    {l:"Objetivo",t:"Extraer información semántica: detectar objetos, medir formas, clasificar regiones de la imagen."},
+    {l:"Segmentación",t:"Dividir la imagen en regiones homogéneas. Umbralización global y método de Otsu (umbral óptimo automático)."},
+    {l:"Detección de bordes",t:"Localizar cambios bruscos de intensidad. Operadores: Sobel, Prewitt, Canny (gradiente + supresión + histéresis)."},
+    {l:"Morfología matemática",t:"Erosión y dilatación sobre imágenes binarias. Base de apertura y cierre morfológico."},
+    {l:"Descriptores de forma",t:"Área, perímetro, circularidad, momentos de Hu — invariantes a rotación, escala y traslación."},
+    {l:"Reconocimiento",t:"Clasificar objetos segmentados. Base del reconocimiento de patrones y ML sobre imágenes."},
+    {l:"Pipeline",t:"Adquisición → Preprocesamiento → Segmentación → Extracción de características → Clasificación → Decisión."},
+  ]},
+  eti:{title:"Etiquetado Componentes Conexas",unit:"Unidad 2 · Análisis Estructural",color:"#c9a7f0",tc:"#7c4dbe",items:[
+    {l:"Objetivo",t:"Identificar y numerar regiones (objetos) aislados en una imagen binaria asignando etiquetas únicas."},
+    {l:"Vecindad V4",t:"4 vecinos: arriba, abajo, izquierda, derecha. Sin diagonales. Conexión menos permisiva."},
+    {l:"Vecindad V8",t:"8 vecinos: incluyendo las 4 diagonales. Más permisiva, detecta más conexiones."},
+    {l:"Paradoja V4/V8",t:"Para consistencia topológica: si el fondo usa V4, los objetos deben usar V8 y viceversa."},
+    {l:"Algoritmo secuencial",t:"1ª pasada: etiquetas provisionales + tabla de equivalencias. 2ª pasada: resuelve con Union-Find."},
+    {l:"Algoritmo BFS",t:"Para cada píxel no etiquetado, BFS explora todos sus vecinos conexos y asigna la misma etiqueta."},
+    {l:"Aplicaciones",t:"Conteo de objetos, medición de área/perímetro por componente, extracción de blobs."},
+  ]},
+  rui:{title:"Modelos de Ruido",unit:"Unidad 2 · Degradación y Restauración",color:"#a7c8f8",tc:"#3a7dd4",items:[
+    {l:"Definición",t:"Variación aleatoria no deseada en la intensidad de los píxeles. Origen: adquisición, transmisión o almacenamiento."},
+    {l:"Gaussiano",t:"Distribución normal con μ (media) y σ² (varianza). El más común en sensores CCD/CMOS."},
+    {l:"Sal y Pimienta",t:"Píxeles aleatorios toman 0 (pimienta) o 255 (sal). Causado por errores en transmisión."},
+    {l:"Uniforme",t:"Todos los valores del intervalo [a,b] igualmente probables. Media = (a+b)/2."},
+    {l:"Rayleigh / Erlang",t:"Rayleigh en imágenes de radar; Erlang/Gamma en imágenes médicas (ultrasonido, RM)."},
+    {l:"Estimación",t:"Se estima el modelo con el histograma de una región homogénea de la imagen."},
+    {l:"Filtros",t:"Media → Gaussiano; Mediana → Sal&Pimienta; Wiener → balance ruido-borrosidad."},
+  ]},
+  ops:{title:"Ops. Aritméticas y Lógicas",unit:"Unidad 2 · Procesamiento Píxel a Píxel",color:"#a7c8f8",tc:"#3a7dd4",items:[
+    {l:"Concepto",t:"Operaciones aplicadas <strong>píxel a píxel</strong> entre dos imágenes del mismo tamaño."},
+    {l:"Suma",t:"<strong>h(x,y) = f(x,y) + g(x,y)</strong>. Promediar N frames reduce el ruido Gaussiano (SNR mejora √N veces)."},
+    {l:"Resta",t:"<strong>h = |f − g|</strong>. Detecta cambios entre fotogramas (motion detection, sustracción de fondo)."},
+    {l:"Multiplicación",t:"<strong>h = f · g</strong>. Aplicar máscaras de interés, shading correction, blending."},
+    {l:"División",t:"<strong>h = f / g</strong>. Corrección de iluminación no uniforme (flat-field correction)."},
+    {l:"AND / OR / NOT",t:"Lógicas sobre imágenes binarias. AND = intersección, OR = unión, NOT = complemento."},
+    {l:"XOR",t:"Diferencia simétrica de dos máscaras. Detecta píxeles que cambiaron entre dos imágenes binarias."},
+  ]},
+};
+
+function openPanel(key){
+  const d=DATA[key];
+  const p=document.getElementById('detail-panel');
+  document.getElementById('dp-title').textContent=d.title;
+  document.getElementById('dp-title').style.color=d.tc;
+  document.getElementById('dp-unit').textContent=d.unit;
+  p.style.borderLeftColor=d.color;
+  document.getElementById('dp-content').innerHTML=d.items.map(i=>`
+    <div class="dp-item">
+      <div class="dp-dot" style="background:${d.color}"></div>
+      <p><strong style="color:${d.tc}">${i.l}:</strong> ${i.t}</p>
+    </div>`).join('');
+  p.classList.add('open');
+}
+function closePanel(){document.getElementById('detail-panel').classList.remove('open');}
+
+const tip=document.getElementById('tooltip');
+document.querySelectorAll('[data-tip]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{tip.textContent=el.getAttribute('data-tip');tip.style.opacity='1';});
+  el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-36)+'px';});
+  el.addEventListener('mouseleave',()=>{tip.style.opacity='0';});
+});
+
+function showView(v){
+  document.getElementById('map-view').style.display=v==='map'?'flex':'none';
+  document.getElementById('card-view').classList.toggle('show',v==='cards');
+  document.getElementById('btn-map').classList.toggle('active',v==='map');
+  document.getElementById('btn-cards').classList.toggle('active',v==='cards');
+  if(v==='cards')buildCards();
+}
+
+const emojis={img:'🖼',hist:'📊',color:'🎨',ai:'🔬',eti:'🏷',rui:'📡',ops:'⚙️'};
+const bgMap={img:'#fde2ef',hist:'#fde2ef',color:'#fde2ef',ai:'#ede1ff',eti:'#ede1ff',rui:'#ddeeff',ops:'#ddeeff'};
+const bdMap={img:'#f8a7c8',hist:'#f8a7c8',color:'#f8a7c8',ai:'#c9a7f0',eti:'#c9a7f0',rui:'#a7c8f8',ops:'#a7c8f8'};
+
+function buildCards(){
+  const g=document.getElementById('card-grid');
+  if(g.children.length>0)return;
+  g.innerHTML=Object.keys(DATA).map(k=>{
+    const d=DATA[k];
+    return `<div class="topic-card" onclick="openPanel('${k}')"
+      style="background:${bgMap[k]};border-color:${bdMap[k]}">
+      <span class="card-emoji">${emojis[k]}</span>
+      <h3 style="color:${d.tc}">${d.title}</h3>
+      <span class="cu" style="color:${d.tc}bb">${d.unit}</span>
+      <ul>${d.items.slice(0,5).map(i=>`<li>${i.l}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
